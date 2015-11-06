@@ -195,8 +195,8 @@ Dictionary::add_translation(const std::string& msgid, const std::string& msgstr)
   }
   else if (vec[0] != msgstr)
   {
-    log_warning << "collision in add_translation: '"
-                << msgid << "' -> '" << msgstr << "' vs '" << vec[0] << "'" << std::endl;
+    //log_warning << "collision in add_translation: '"
+    //            << msgid << "' -> '" << msgstr << "' vs '" << vec[0] << "'" << std::endl;
     vec[0] = msgstr;
   }
 }
@@ -213,9 +213,7 @@ Dictionary::add_translation(const std::string& msgctxt,
   }
   else if (vec != msgstrs)
   {
-    log_warning << "collision in add_translation: '"
-                << msgctxt << "', '" << msgid << "', '" << msgid_plural
-                << "' -> [" << vec << "] vs [" << msgstrs << "]" << std::endl;
+    //log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\", \"" << msgid_plural << "\")" << std::endl;
     vec = msgstrs;
   }
 }
@@ -230,9 +228,7 @@ Dictionary::add_translation(const std::string& msgctxt, const std::string& msgid
   }
   else if (vec[0] != msgstr)
   {
-    log_warning << "collision in add_translation: '"
-                << msgctxt << "', '" << msgid
-                << "' -> '" << vec[0] << "' vs '" << msgstr << "'" << std::endl;
+    //log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\")" << std::endl;
     vec[0] = msgstr;
   }
 }
