@@ -214,6 +214,7 @@ Dictionary::add_translation(const std::string& msgctxt,
   else if (vec != msgstrs)
   {
     //log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\", \"" << msgid_plural << "\")" << std::endl;
+    (void) msgid_plural;
     vec = msgstrs;
   }
 }
