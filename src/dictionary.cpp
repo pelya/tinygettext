@@ -98,11 +98,10 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
   }
   else
   {
-#ifdef DEBUG
     log_info << "Couldn't translate: " << msgid << std::endl;
     log_info << "Candidates: " << std::endl;
-    for (it = dict.begin(); it != dict.end(); ++it)
-      log_info << "'" << it->first << "'" << std::endl;
+    for (i = dict.begin(); i != dict.end(); ++i)
+      log_info << "'" << i->first << "'" << std::endl;
 
     if (count == 1) // default to english rules
       return msgid;
@@ -127,9 +126,8 @@ Dictionary::translate(const Entries& dict, const std::string& msgid) const
   }
   else
   {
-#ifdef DEBUG
     log_info << "Couldn't translate: " << msgid << std::endl;
-#endif
+
     if (m_has_fallback) return m_fallback->translate(msgid);
     else return msgid;
   }
@@ -145,9 +143,7 @@ Dictionary::translate_ctxt(const std::string& msgctxt, const std::string& msgid)
   }
   else
   {
-#ifdef DEBUG
     log_info << "Couldn't translate: " << msgid << std::endl;
-#endif
     return msgid;
   }
 }
@@ -199,10 +195,8 @@ Dictionary::add_translation(const std::string& msgid, const std::string& msgstr)
   }
   else if (vec[0] != msgstr)
   {
-#ifdef DEBUG
     log_warning << "collision in add_translation: '"
                 << msgid << "' -> '" << msgstr << "' vs '" << vec[0] << "'" << std::endl;
-#endif
     vec[0] = msgstr;
   }
 }
@@ -219,11 +213,7 @@ Dictionary::add_translation(const std::string& msgctxt,
   }
   else if (vec != msgstrs)
   {
-#ifdef DEBUG
     log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\", \"" << msgid_plural << "\")" << std::endl;
-#else
-    (void) msgid_plural;
-#endif
     vec = msgstrs;
   }
 }
@@ -238,9 +228,7 @@ Dictionary::add_translation(const std::string& msgctxt, const std::string& msgid
   }
   else if (vec[0] != msgstr)
   {
-#ifdef DEBUG
     log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\")" << std::endl;
-#endif
     vec[0] = msgstr;
   }
 }
