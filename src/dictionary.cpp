@@ -100,7 +100,7 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
   {
     log_info << "Couldn't translate: " << msgid << std::endl;
     log_info << "Candidates: " << std::endl;
-    for (i = dict.begin(); i != dict.end(); ++i)
+    for (it = dict.begin(); it != dict.end(); ++it)
       log_info << "'" << i->first << "'" << std::endl;
 
     if (count == 1) // default to english rules
