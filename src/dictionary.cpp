@@ -24,17 +24,6 @@
 
 namespace tinygettext {
 
-std::ostream& operator<<(std::ostream& o, const std::vector<std::string>& v)
-{
-  for (std::vector<std::string>::const_iterator it = v.begin(); it != v.end(); ++it)
-  {
-    if (it != v.begin())
-      o << ", ";
-    o << "'" << *it << "'";
-  }
-  return o;
-}
-
 Dictionary::Dictionary(const std::string& charset_) :
   entries(),
   ctxt_entries(),
@@ -68,19 +57,21 @@ Dictionary::get_plural_forms() const
 }
 
 std::string
-Dictionary::translate_plural(const std::string& msgid, const std::string& msgid_plural, int num) const
+Dictionary::translate_plural(const std::string& msgid, const std::string& msgid_plural, int num)
 {
   return translate_plural(entries, msgid, msgid_plural, num);
 }
 
 std::string
-Dictionary::translate_plural(const Entries& dict, const std::string& msgid, const std::string& msgid_plural, int count) const
+Dictionary::translate_plural(const Entries& dict, const std::string& msgid, const std::string& msgid_plural, int count)
 {
-  Entries::const_iterator it = dict.find(msgid);
-  if (it != dict.end())
+  Entries::const_iterator i = dict.find(msgid);
+  const std::vector<std::string>& msgstrs = i->second;
+
+  if (i != dict.end())
   {
-    unsigned int n = plural_forms.get_plural(count);
-    const std::vector<std::string>& msgstrs = it->second;
+    unsigned int n = 0;
+    n = plural_forms.get_plural(count);
     if (n >= msgstrs.size())
     {
       log_error << "Plural translation not available (and not set to empty): '" << msgid << "'" << std::endl;
@@ -100,8 +91,8 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
   {
     log_info << "Couldn't translate: " << msgid << std::endl;
     log_info << "Candidates: " << std::endl;
-    for (it = dict.begin(); it != dict.end(); ++it)
-      log_info << "'" << it->first << "'" << std::endl;
+    for (i = dict.begin(); i != dict.end(); ++i)
+      log_info << "'" << i->first << "'" << std::endl;
 
     if (count == 1) // default to english rules
       return msgid;
@@ -111,13 +102,13 @@ Dictionary::translate_plural(const Entries& dict, const std::string& msgid, cons
 }
 
 std::string
-Dictionary::translate(const std::string& msgid) const
+Dictionary::translate(const std::string& msgid)
 {
   return translate(entries, msgid);
 }
 
 std::string
-Dictionary::translate(const Entries& dict, const std::string& msgid) const
+Dictionary::translate(const Entries& dict, const std::string& msgid)
 {
   Entries::const_iterator i = dict.find(msgid);
   if (i != dict.end() && !i->second.empty())
@@ -134,9 +125,9 @@ Dictionary::translate(const Entries& dict, const std::string& msgid) const
 }
 
 std::string
-Dictionary::translate_ctxt(const std::string& msgctxt, const std::string& msgid) const
+Dictionary::translate_ctxt(const std::string& msgctxt, const std::string& msgid)
 {
-  CtxtEntries::const_iterator i = ctxt_entries.find(msgctxt);
+  CtxtEntries::iterator i = ctxt_entries.find(msgctxt);
   if (i != ctxt_entries.end())
   {
     return translate(i->second, msgid);
@@ -150,9 +141,9 @@ Dictionary::translate_ctxt(const std::string& msgctxt, const std::string& msgid)
 
 std::string
 Dictionary::translate_ctxt_plural(const std::string& msgctxt,
-                                  const std::string& msgid, const std::string& msgidplural, int num) const
+                                  const std::string& msgid, const std::string& msgidplural, int num)
 {
-  CtxtEntries::const_iterator i = ctxt_entries.find(msgctxt);
+  CtxtEntries::iterator i = ctxt_entries.find(msgctxt);
   if (i != ctxt_entries.end())
   {
     return translate_plural(i->second, msgid, msgidplural, num);
@@ -168,21 +159,12 @@ Dictionary::translate_ctxt_plural(const std::string& msgctxt,
 }
 
 void
-Dictionary::add_translation(const std::string& msgid, const std::string& msgid_plural,
+Dictionary::add_translation(const std::string& msgid, const std::string& ,
                             const std::vector<std::string>& msgstrs)
 {
-  std::vector<std::string>& vec = entries[msgid];
-  if (vec.empty())
-  {
-    vec = msgstrs;
-  }
-  else if (vec != msgstrs)
-  {
-    log_warning << "collision in add_translation: '"
-                << msgid << "', '" << msgid_plural
-                << "' -> [" << vec << "] vs [" << msgstrs << "]" << std::endl;
-    vec = msgstrs;
-  }
+  // Do we need msgid2 for anything? its after all supplied to the
+  // translate call, so we just throw it away here
+  entries[msgid] = msgstrs;
 }
 
 void
@@ -211,11 +193,9 @@ Dictionary::add_translation(const std::string& msgctxt,
   {
     vec = msgstrs;
   }
-  else if (vec != msgstrs)
+  else
   {
-    log_warning << "collision in add_translation: '"
-                << msgctxt << "', '" << msgid << "', '" << msgid_plural
-                << "' -> [" << vec << "] vs [" << msgstrs << "]" << std::endl;
+    log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\", \"" << msgid_plural << "\")" << std::endl;
     vec = msgstrs;
   }
 }
@@ -228,11 +208,9 @@ Dictionary::add_translation(const std::string& msgctxt, const std::string& msgid
   {
     vec.push_back(msgstr);
   }
-  else if (vec[0] != msgstr)
+  else
   {
-    log_warning << "collision in add_translation: '"
-                << msgctxt << "', '" << msgid
-                << "' -> '" << vec[0] << "' vs '" << msgstr << "'" << std::endl;
+    log_warning << "collision in add_translation(\"" << msgctxt << "\", \"" << msgid << "\")" << std::endl;
     vec[0] = msgstr;
   }
 }

@@ -1,6 +1,6 @@
 tinygettext - A gettext replacement that works directly on .po files
 
-Copyright (c) 2004-2016
+Copyright (c) 2004-2015
 
 * Bastiaan Zapf <bzapf@example.org>
 * Christoph Sommer <mail@christoph-sommer.de>
@@ -14,7 +14,6 @@ Copyright (c) 2004-2016
 * Ravu al Hemio <ondra.hosek@gmail.com>
 * Ryan Flegel <rflegel@gmail.com>
 * Tim Goya <tuxdev103@gmail.com>
-* Tobias Markus <tobbi.bugs@gmail.com>
 * Wolfgang Becker <uafr@gmx.de>
 
 This software is provided 'as-is', without any express or implied

@@ -5,8 +5,6 @@ tinygettext API related stuff
   unified via overloading, not sure if that is a good idea. For the
   same reason add_translation() could be de-overloaded, to
   add_translation_ctxt, ...
-  `Note that an empty context string and an absent msgctxt line do not mean the same thing.'
-  https://www.gnu.org/software/gettext/manual/gettext.html
 
 * iconv handling needs cleanup and more flexibility, since some
   systems don't provide iconv or only through SDL
@@ -48,6 +46,18 @@ tinygettext implementation details
   N_(id) -> gettext_noop(id) (gettext default)
   C_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
   NC_(ctxt, id) -> pgettext(ctxt, id) (Gnome does this: http://library.gnome.org/devel/glib/2.16/glib-I18N.html#Q-:CAPS)
+
+* figure out how up-to-date other tinygettext implementations in the
+  wild are (LinCity):
+
+  Pingus:
+  -------
+  dictionary.hpp (synced with Pingus)
+  dictionary_manager.hpp (PhysFS vs opendir())
+  language_def.hpp (synced with Pingus)
+  po_file_reader.hpp (UTF-8 0xef-'header', lots of stuff from mathner)
+  tinygettext.hpp (iconv vs convert)
+
 
 Random Unimportant Stuff
 ------------------------
